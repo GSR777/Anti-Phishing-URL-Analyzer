@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Phishing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color:  #FAE6FA;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .main {
+            flex: 1;
+        }
+
+        #logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 0px;
+        }
+
+        #url-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background-color: #CCCCFF;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #url-form label {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        #url-form input {
+            font-size: 1rem;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+
+        #url-form button {
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: #3f51b5;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #url-form button:hover {
+            background-color: #283593;
+        }
+
+        #messages {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        #tips {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #CCCCFF;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            text-align: center;
+        }
+
+        #tips p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .side-content {
+            width: 25%;
+            background-color: #CCCCFF;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-content h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .side-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .side-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .side-content li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <img src="anti_phishing.png" alt="Anti-Phishing URL Checker" id="logo">
+
+    <div class="container">
+        <div class="side-content">
+            <h3>Recent Results</h3>
+            <ul>
+                <li>example.com - Safe</li>
+                <li>phishingwebsite.net - Not Safe</li>
+                <li>legitimatesite.org - Safe</li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <form id="url-form">
+                <label for="url">Enter URL:</label>
+                <input type="text" id="url" name="url" required>
+                <button type="submit">Analyze</button>
+            </form>
+
+            <div id="messages"></div>
+
+            <div id="tips">
+                <p>Look out for spelling and grammar errors in emails or messages. Legitimate companies and organizations usually have professional-looking communications.</p>
+            </div>
+        </div>
+
+        <div class="side-content">
+            <h3>Frequently Asked Questions</h3>
+            <ul>
+                <li>How does the Anti-Phishing URL Checker work?</li>
+                <li>What should I do if I find a phishing URL?</li>
+                <li>How can I protect myself from phishing attacks?</li>
+            </ul>
+        </div>
+    
+        <div id="faq">
+            <h2>Frequently Asked Questions</h2>
+            <ul>
+                <li>How does the Anti-Phishing URL Checker work?</li>
+                <li>What should I do if I find a phishing URL?</li>
+                <li>How can I protect myself from phishing attacks?</li>
+                <!-- Add more FAQ questions as needed -->
+            </ul>
+        </div>
+    
+        <script>
+            document.getElementById("url-form").addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const url = document.getElementById("url").value;
+                const messages = document.getElementById("messages");
+                messages.innerHTML = "Analyzing the URL...";
+                
+                const response = await fetch("/analyze", {
+                    method: "POST",
+                    body: new FormData(event.target),
+                });
+                const result = await response.json();
+    
+                if (result.error) {
+                    messages.innerHTML = "Error: " + result.error;
+                } else {
+                    messages.innerHTML = result.is_safe ? "The URL is safe." : "The URL is not safe.";
+                }
+            });
+    
+            const tips = [
+            "Never share personal information, such as your passwords or financial details, via email or any other unsecured platform.",
+            "Be wary of unsolicited emails or messages that ask you to click on links or download attachments. Always verify the sender's identity before taking any action.",
+            "Look out for spelling and grammar errors in emails or messages. Legitimate companies and organizations usually have professional-looking communications.",
+            "Don't trust emails or messages that create a sense of urgency, such as threatening to close your account if you don't take immediate action. Scammers often use this tactic to pressure victims into making quick decisions.",
+            "Always double-check the website's URL before entering any sensitive information. Phishing scams often use fake websites that mimic legitimate ones.",
+            "Educate yourself and stay up-to-date on the latest phishing scams and tactics. Knowledge is the best defense against cybercrime.",
+            "Use anti-virus software and keep it updated to protect your devices from malware and other security threats.",
+            "Be cautious of emails or messages that offer something too good to be true, such as a prize or a free gift. Scammers often use these tactics to lure victims into sharing their personal information.",
+            "Always hover over links before clicking on them to see the actual URL. If it looks suspicious, don't click on it.",
+            "Avoid using public Wi-Fi or unsecured networks for sensitive activities, such as online banking or shopping. Hackers can intercept your data on these networks.",
+            "Don't trust caller ID or email addresses, as they can be easily spoofed. Always verify the identity of the person or organization before sharing any sensitive information.",
+            "Keep your software and operating system up-to-date with the latest security patches and updates. This can help prevent vulnerabilities that hackers can exploit.",
+            "Use two-factor authentication whenever possible to add an extra layer of security to your accounts.",
+            "Be mindful of the information you share on social media, as it can be used by hackers to craft targeted phishing messages.",
+        ];
+    
+            let tipIndex = 0;
+            const tipElement = document.getElementById("tips");
+    
+            function showNextTip() {
+                const tip = tips[tipIndex];
+                const paragraphs = tip.split('\n');
+                let html = '';
+    
+                for (let i = 0; i < paragraphs.length; i++) {
+                    html += '<p>' + paragraphs[i] + '</p>';
+                }
+    
+                tipElement.innerHTML = html;
+    
+                tipIndex = (tipIndex + 1) % tips.length;
+                setTimeout(showNextTip, 10000);
+            }
+    
+            showNextTip();
+        </script>
+    </body>
+    </html>
+    
